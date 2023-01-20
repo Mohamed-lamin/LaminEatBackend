@@ -1,7 +1,7 @@
 import express from "express"
 import mongoose from "mongoose"
 
-import RestaurantPlat from "../Models/RestaurantPlat.js"
+import RestaurantPlat from "../models/RestaurantPlat.js"
 
 const router = express.Router()
 
