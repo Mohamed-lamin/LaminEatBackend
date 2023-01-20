@@ -6,6 +6,6 @@ const postSchema = mongoose.Schema({
   selectedFile: String,
 })
 
-var RestaurantPlat = mongoose.model("RestaurantPlat", postSchema)
+const RestaurantPlat = mongoose.model("RestaurantPlat", postSchema)
 
 export default RestaurantPlat
