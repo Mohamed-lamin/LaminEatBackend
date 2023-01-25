@@ -7,12 +7,13 @@ import {
   updatePlat,
   deletePlat,
 } from "../controllers/RestaurantPosts.js"
+import auth from "../middleware/auth.js"
 
 const router = express.Router()
 
-router.get("/", getPlats)
-router.post("/", createPlat)
-router.get("/:id", getPlat)
-router.patch("/:id", updatePlat)
-router.delete("/:id", deletePlat)
+router.get("/", auth, getPlats)
+router.post("/", auth, createPlat)
+router.get("/:id", auth, getPlat)
+router.patch("/:id", auth, updatePlat)
+router.delete("/:id", auth, deletePlat)
 export default router

@@ -6,7 +6,9 @@ const router = express.Router()
 
 export const getPlats = async (req, res) => {
   try {
-    const RestaurantPlats = await RestaurantPlat.find()
+    const RestaurantPlats = await RestaurantPlat.find({
+      restaurantId: req.userId,
+    })
 
     res.status(200).json(RestaurantPlats)
   } catch (error) {
@@ -27,12 +29,10 @@ export const getPlat = async (req, res) => {
 }
 
 export const createPlat = async (req, res) => {
-  const { title, description, selectedFile } = req.body
-
+  const plat = req.body
   const newRestaurantPlat = new RestaurantPlat({
-    title,
-    description,
-    selectedFile,
+    ...plat,
+    restaurantId: req.userId,
   })
 
   try {
