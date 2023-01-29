@@ -44,3 +44,13 @@ export const createplatOf = async (req, res) => {
     res.status(404).json({ error: error })
   }
 }
+
+export const getAllRestaurants = async (req, res) => {
+  try {
+    const allRestaurants = await restaurant.find()
+    // res.status(200).json(allRestaurants)
+    res.send(allRestaurants)
+  } catch (error) {
+    res.status(404).json({ message: error.message })
+  }
+}

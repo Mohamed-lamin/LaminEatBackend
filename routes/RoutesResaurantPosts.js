@@ -12,6 +12,7 @@ import {
   getAllAboutTheResaurant,
   createplatOf,
   createRestaurant,
+  getAllRestaurants,
 } from "../controllers/restaurants.js"
 
 const router = express.Router()
@@ -19,6 +20,7 @@ const router = express.Router()
 // router.get("/", auth, affich)
 
 router.get("/restaurants", auth, getAllAboutTheResaurant)
+router.get("/restaurants/mobile", getAllRestaurants)
 router.patch("/restaurants", auth, createplatOf)
 router.post("/", auth, createPlat)
 router.get("/:id", auth, getPlat)
