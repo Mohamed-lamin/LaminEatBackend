@@ -50,6 +50,7 @@ export const getAllRestaurants = async (req, res) => {
     const allRestaurants = await restaurant.find()
     // res.status(200).json(allRestaurants)
     res.send(allRestaurants)
+    res.status(200).json(allRestaurants)
   } catch (error) {
     res.status(404).json({ message: error.message })
   }
