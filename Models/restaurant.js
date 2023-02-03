@@ -24,10 +24,6 @@ const restaurantSchema = mongoose.Schema({
   dishes: [dishSchema],
   userId: String,
 })
-// const threetypeSchema = mongoose.Schema({
-//   type_name: String,
-//   description: String,
-//   restaurant: [restaurantSchema],
-// })
+
 const restaurant = mongoose.model("resto", restaurantSchema)
 export default restaurant

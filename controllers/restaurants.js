@@ -1,3 +1,5 @@
+// import { assignCategory } from "../Models/categories.js"
+import categoryForMobile from "../Models/categories.js"
 import restaurant from "../Models/restaurant.js"
 
 export const getAllAboutTheResaurant = async (req, res) => {
@@ -17,6 +19,7 @@ export const createRestaurant = async (req, res) => {
       userId: req.userId,
     })
     res.status(200).json(newRestaurant)
+    assignCategory()
   } catch (error) {
     res.status(404).json({ error: error.message })
   }
@@ -49,9 +52,55 @@ export const getAllRestaurants = async (req, res) => {
   try {
     const allRestaurants = await restaurant.find()
     // res.status(200).json(allRestaurants)
-    res.send(allRestaurants)
-    res.status(200).json(allRestaurants)
+
+    return res.status(200).json(allRestaurants)
   } catch (error) {
     res.status(404).json({ message: error.message })
+  }
+}
+export const assignCategory = async (req, res) => {
+  const allresults = await restaurant.find()
+  for (let i = 0; i < allresults.length; i++) {
+    if (allresults[i].description.includes("amuser")) {
+      const category1 = await categoryForMobile.findOneAndUpdate(
+        { type_name: "Séléction" },
+        {
+          type_name: "Séléction",
+          description: "Decouvrez les offres des restaurants partenaires",
+          restaurants_array: allresults[i],
+        }
+      )
+
+      await category1.save()
+    }
+    if (allresults[i].description.includes("partenaire")) {
+      const category2 = await categoryForMobile.findOneAndUpdate(
+        { type_name: "Reduction" },
+        {
+          type_name: "Reduction",
+          description: "Decouvrez les offres des restaurants partenaires",
+          restaurants_array: { ...allresults[i] },
+        }
+      )
+      await category2.save()
+    } else {
+      const category3 = await categoryForMobile.findOneAndUpdate(
+        { type_name: "Offre à coté" },
+        {
+          type_name: "Offre à coté",
+          description: "Decouvrez les offres des restaurants partenaires",
+          restaurants_array: allresults[i],
+        }
+      )
+      await category3.save()
+    }
+  }
+}
+export const allCategories = async (req, res) => {
+  try {
+    const allCategories = await categoryForMobile.find()
+    return res.status(200).json(allCategories)
+  } catch (error) {
+    console.log(error)
   }
 }
