@@ -27,14 +27,7 @@ const CONNECTIONURL = process.env.CONNECTION
 console.log(CONNECTIONURL)
 
 mongoose
-<<<<<<< HEAD
-  .connect(
-    "mongodb+srv://daminsoft:RFolSa9Op0jRabl5@cluster0.1mouxyv.mongodb.net/?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
-=======
   .connect("mongodb+srv://daminsoft:RFolSa9Op0jRabl5@cluster0.1mouxyv.mongodb.net/?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
->>>>>>> b2f79b519181c2aee0dec5ca868bb1ac6f65d71e
   .then(() =>
   
     app.listen(PORT, () => console.log(`Server Running on Port:${PORT}`))
