@@ -160,8 +160,8 @@ export const createRestaurant = async (req, res) => {
       { new: true }
     )
     await updateduser.save()
-    console.log(updateduser)
-    return res.status(200).json(updateduser)
+
+    return res.status(200).json({ result: updateduser })
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
@@ -235,7 +235,7 @@ export const deletePlat = async (req, res) => {
 
     res
       .status(200)
-      .json(restaurantToUpdate.dishes.filter(dish => dish.id === thePlaId))
+      .json(...restaurantToUpdate.dishes.filter(dish => dish.id === thePlaId))
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
@@ -289,7 +289,7 @@ export const CatList = async (req, res) => {
   const { id } = req.params
   const { listName } = req.body
   console.log(listName)
-  console.log(id)
+
   try {
     const theRestaurnt = await restaurant.findById(id)
     const theCatList = await type.findOne({ type_name: listName })
@@ -303,7 +303,8 @@ export const CatList = async (req, res) => {
 export const getCatList = async (req, res) => {
   try {
     const AllTypes = await type.find()
-    return res.status(200).json(AllTypes)
+
+    return res.status(200).send(AllTypes)
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
