@@ -9,9 +9,14 @@ const categorySchema = mongoose.Schema({
 
 const dishSchema = mongoose.Schema({
   dishname: String,
+  categorie: String,
   description: String,
   price: Number,
   image: String,
+})
+const commande = mongoose.Schema({
+  id: String,
+  commande: [dishSchema],
 })
 
 const restaurantSchema = mongoose.Schema({
@@ -20,7 +25,6 @@ const restaurantSchema = mongoose.Schema({
   image: String,
   lat: Number,
   long: Number,
-  // address: String,
   numero: Number,
   rue: String,
   ville: String,
@@ -29,6 +33,7 @@ const restaurantSchema = mongoose.Schema({
   category: String,
   dishes: [dishSchema],
   userId: String,
+  commandes: [commande],
 })
 const TypeSchema = mongoose.Schema({
   type_name: String,
@@ -43,11 +48,19 @@ const userSchema = mongoose.Schema({
   id: { type: String },
   restaurantUser: restaurantSchema,
 })
-
+// Client Schema
+const clientSchema = mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  password: { type: String, required: true },
+  id: { type: String },
+  commandes: [commande],
+})
 const type = mongoose.model("Type", TypeSchema)
 const restaurant = mongoose.model("restaurant", restaurantSchema)
 const dish = mongoose.model("dish", dishSchema)
 const UserModal = mongoose.model("User", userSchema)
+const client = mongoose.model("client", clientSchema)
 
 export const createType = async (req, res) => {
   const { type_name, description } = req.body
@@ -307,5 +320,62 @@ export const getCatList = async (req, res) => {
     return res.status(200).send(AllTypes)
   } catch (error) {
     return res.status(500).json({ message: error.message })
+  }
+}
+// Client singn in and up
+export const clientSignin = async (req, res) => {
+  const { email, password } = req.body
+
+  try {
+    const oldClient = await client.findOne({ email })
+
+    if (!oldClient)
+      return res.status(404).json({ message: "utilisateur n'existe pas" })
+
+    const isPasswordCorrect = await bcrypt.compare(password, oldClient.password)
+
+    if (!isPasswordCorrect)
+      return res.status(400).json({ message: "Identifiants non valides" })
+
+    const token = jwt.sign(
+      { email: oldClient.email, id: oldClient._id },
+      secret,
+      {
+        expiresIn: "1h",
+      }
+    )
+
+    res.status(200).json({ result: oldClient, token })
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
+}
+
+export const clientSignup = async (req, res) => {
+  const { email, password, firstname, lastname } = req.body
+
+  try {
+    const oldClient = await client.findOne({ email })
+
+    if (oldClient)
+      return res.status(400).json({ message: "utilisateur existe déja" })
+
+    const hashedPassword = await bcrypt.hash(password, 12)
+
+    const result = await client.create({
+      email,
+      password: hashedPassword,
+      name: `${firstname} ${lastname}`,
+    })
+
+    const token = jwt.sign({ email: result.email, id: result._id }, secret, {
+      expiresIn: "1h",
+    })
+
+    res.status(201).json({ result, token })
+  } catch (error) {
+    res.status(500).json({ message: "Une erreur est survenue" })
+
+    console.log(error)
   }
 }
