@@ -3,12 +3,14 @@ import {
   CatList,
   clientSignin,
   clientSignup,
+  commandes,
   createPlats,
   createRestaurant,
   createType,
   deletePlat,
   getCatList,
   getPlats,
+  laCommande,
   signin,
   signup,
   updatePlat,
@@ -33,5 +35,8 @@ router.post("/clientsignin", clientSignin)
 // User Auth
 router.post("/signin", signin)
 router.post("/signup", signup)
-
+// Create command
+router.post("/commande/:id", laCommande)
+// get commands
+router.get("/commands", commandes)
 export default router

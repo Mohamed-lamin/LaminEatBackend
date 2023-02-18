@@ -14,9 +14,10 @@ const dishSchema = mongoose.Schema({
   price: Number,
   image: String,
 })
-const commande = mongoose.Schema({
-  id: String,
-  commande: [dishSchema],
+const commandSchema = mongoose.Schema({
+  restaurantId: String,
+  clientName: String,
+  commandes: Array,
 })
 
 const restaurantSchema = mongoose.Schema({
@@ -33,7 +34,7 @@ const restaurantSchema = mongoose.Schema({
   category: String,
   dishes: [dishSchema],
   userId: String,
-  commandes: [commande],
+  commandes: [commandSchema],
 })
 const TypeSchema = mongoose.Schema({
   type_name: String,
@@ -54,13 +55,13 @@ const clientSchema = mongoose.Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   id: { type: String },
-  commandes: [commande],
 })
 const type = mongoose.model("Type", TypeSchema)
 const restaurant = mongoose.model("restaurant", restaurantSchema)
 const dish = mongoose.model("dish", dishSchema)
 const UserModal = mongoose.model("User", userSchema)
 const client = mongoose.model("client", clientSchema)
+const command = mongoose.model("commande", commandSchema)
 
 export const createType = async (req, res) => {
   const { type_name, description } = req.body
@@ -377,5 +378,31 @@ export const clientSignup = async (req, res) => {
     res.status(500).json({ message: "Une erreur est survenue" })
 
     console.log(error)
+  }
+}
+// create Commande
+export const laCommande = async (req, res) => {
+  const { id } = req.params
+  const { platsCommand } = req.body
+  console.log(platsCommand)
+  try {
+    const newCommande = await command.create({
+      restaurantId: id,
+      commandes: platsCommand,
+      clientName: "test",
+    })
+    await newCommande.save()
+    res.status(200).json({ message: "its saved" })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+// get Commandes
+export const commandes = async (req, res) => {
+  try {
+    const AllCommands = await command.find()
+    return res.status(200).json(AllCommands)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
   }
 }
