@@ -15,9 +15,11 @@ const dishSchema = mongoose.Schema({
   image: String,
 })
 const commandSchema = mongoose.Schema({
+  clientId: String,
   restaurantId: String,
   clientName: String,
   commandes: Array,
+  total: String,
 })
 
 const restaurantSchema = mongoose.Schema({
@@ -34,7 +36,6 @@ const restaurantSchema = mongoose.Schema({
   category: String,
   dishes: [dishSchema],
   userId: String,
-  commandes: [commandSchema],
 })
 const TypeSchema = mongoose.Schema({
   type_name: String,
@@ -62,6 +63,7 @@ const dish = mongoose.model("dish", dishSchema)
 const UserModal = mongoose.model("User", userSchema)
 const client = mongoose.model("client", clientSchema)
 const command = mongoose.model("commande", commandSchema)
+const category = mongoose.model("category", categorySchema)
 
 export const createType = async (req, res) => {
   const { type_name, description } = req.body
@@ -383,13 +385,15 @@ export const clientSignup = async (req, res) => {
 // create Commande
 export const laCommande = async (req, res) => {
   const { id } = req.params
-  const { platsCommand } = req.body
-  console.log(platsCommand)
+  const { platsCommand, clientId, clientName, total } = req.body
+
   try {
     const newCommande = await command.create({
+      clientId: clientId,
       restaurantId: id,
       commandes: platsCommand,
-      clientName: "test",
+      clientName: clientName,
+      total: total,
     })
     await newCommande.save()
     res.status(200).json({ message: "its saved" })
@@ -399,10 +403,36 @@ export const laCommande = async (req, res) => {
 }
 // get Commandes
 export const commandes = async (req, res) => {
+  const { id } = req.params
   try {
-    const AllCommands = await command.find()
+    const AllCommands = await command.find({ restaurantId: id })
     return res.status(200).json(AllCommands)
   } catch (error) {
     return res.status(500).json({ message: error.message })
+  }
+}
+// Create Categories
+
+export const CreateCategory = async (req, res) => {
+  const { dishname, image } = req.body
+  console.log()
+  try {
+    const newCatego = await category.create({
+      category_name: dishname,
+      category_image: image,
+    })
+    await newCatego.save()
+    return res.status(200).json({ message: "it is ok" })
+  } catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
+// Fetch all Categories
+export const getCategories = async (req, res) => {
+  try {
+    const allCategories = await category.find()
+    return res.status(200).json(allCategories)
+  } catch (error) {
+    return res.status(500).json(error.message)
   }
 }

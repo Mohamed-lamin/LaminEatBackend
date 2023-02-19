@@ -4,10 +4,12 @@ import {
   clientSignin,
   clientSignup,
   commandes,
+  CreateCategory,
   createPlats,
   createRestaurant,
   createType,
   deletePlat,
+  getCategories,
   getCatList,
   getPlats,
   laCommande,
@@ -31,12 +33,14 @@ router.patch("/restaurant/updateplat/:id", updatePlat)
 // client routes
 router.post("/clientsignup", clientSignup)
 router.post("/clientsignin", clientSignin)
-
+// Restaurants categories
+router.post("/category", CreateCategory)
+router.get("/category", getCategories)
 // User Auth
 router.post("/signin", signin)
 router.post("/signup", signup)
 // Create command
 router.post("/commande/:id", laCommande)
 // get commands (afficher toutes les commandes)
-router.get("/commands", commandes)
+router.get("/commands/:id", commandes)
 export default router
