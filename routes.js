@@ -41,6 +41,6 @@ router.post("/signin", signin)
 router.post("/signup", signup)
 // Create command
 router.post("/commande/:id", laCommande)
-// get commands (afficher toutes les commandes))
+// get commands (afficher toutes les commandes)
 router.get("/commands/:id", commandes)
 export default router
