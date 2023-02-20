@@ -22,7 +22,7 @@ const router = express.Router()
 
 // Create Type once
 router.post("/createtype", createType)
-// Add to type
+// Add to type.
 router.post("/type/:id", CatList)
 router.get("/types", getCatList)
 // Create Restaurant and Plats
