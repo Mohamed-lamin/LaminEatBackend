@@ -16,6 +16,7 @@ import {
   signin,
   signup,
   updatePlat,
+  updateRestaurant,
 } from "./controller.js"
 const router = express.Router()
 
@@ -26,6 +27,7 @@ router.post("/type/:id", CatList)
 router.get("/types", getCatList)
 // Create Restaurant and Plats
 router.post("/restaurant/:id", createRestaurant)
+router.post("/restaurant", updateRestaurant)
 router.post("/restaurant/plats/:id", createPlats)
 router.get("/restaurant/plats/:id", getPlats)
 router.post("/restaurant/deleteplat/:id", deletePlat)

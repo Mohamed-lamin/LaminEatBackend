@@ -182,6 +182,56 @@ export const createRestaurant = async (req, res) => {
     return res.status(500).json({ message: error.message })
   }
 }
+// Updating restaurant
+export const updateRestaurant = async (req, res) => {
+  const {
+    restaurant_name,
+    description,
+    image,
+    lat,
+    long,
+    numero,
+    rue,
+    ville,
+    codepostal,
+    rating,
+    category,
+    _id,
+    id,
+  } = req.body
+  console.log(_id)
+  try {
+    if (!mongoose.Types.ObjectId.isValid(_id))
+      return res.status(404).send(`pas de restaurant avec id : ${_id}`)
+    const updatedRestaurant = {
+      restaurant_name,
+      description,
+      image,
+      lat,
+      long,
+      numero,
+      rue,
+      ville,
+      codepostal,
+      rating,
+      category,
+      _id: _id,
+    }
+    console.log(restaurant_name)
+    await restaurant.findByIdAndUpdate(_id, updatedRestaurant, {
+      new: true,
+    })
+
+    const newuser = await UserModal.findByIdAndUpdate(
+      id,
+      { restaurantUser: updatedRestaurant },
+      { new: true }
+    )
+    return res.status(200).json({ result: newuser })
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+}
 // Creating Plats
 
 export const createPlats = async (req, res) => {
