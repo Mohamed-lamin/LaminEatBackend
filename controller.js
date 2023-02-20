@@ -48,7 +48,7 @@ const userSchema = mongoose.Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   id: { type: String },
-  restaurantUser: restaurantSchema,
+  restaurantId: String,
 })
 // Client Schema
 const clientSchema = mongoose.Schema({
@@ -172,16 +172,29 @@ export const createRestaurant = async (req, res) => {
 
     const updateduser = await UserModal.findByIdAndUpdate(
       UserId,
-      { _id: UserId, restaurantUser: newRestaurant },
+      { _id: UserId, restaurantId: newRestaurant._id },
       { new: true }
     )
     await updateduser.save()
 
-    return res.status(200).json({ result: updateduser })
+    return res.status(200).json(newRestaurant)
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
 }
+// get the specific restaurant
+
+export const getTheRestaurant = async (req, res) => {
+  const { id } = req.params
+  console.log("th" + id)
+  try {
+    const theRestauant = await restaurant.findById(id)
+    return res.status(200).json(theRestauant)
+  } catch (error) {
+    res.status(500).json(error.message)
+  }
+}
+
 // Updating restaurant
 export const updateRestaurant = async (req, res) => {
   const {

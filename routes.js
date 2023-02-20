@@ -12,6 +12,7 @@ import {
   getCategories,
   getCatList,
   getPlats,
+  getTheRestaurant,
   laCommande,
   signin,
   signup,
@@ -41,6 +42,7 @@ router.get("/category", getCategories)
 // User Auth
 router.post("/signin", signin)
 router.post("/signup", signup)
+router.post("/restaurantuser/:id", getTheRestaurant)
 // Create command
 router.post("/commande/:id", laCommande)
 // get commands (afficher toutes les commandes)
