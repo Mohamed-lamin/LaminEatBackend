@@ -58,6 +58,7 @@ const clientSchema = mongoose.Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   id: { type: String },
+  profileimage: String,
 })
 const type = mongoose.model("Type", TypeSchema)
 const restaurant = mongoose.model("restaurant", restaurantSchema)
