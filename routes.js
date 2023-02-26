@@ -45,7 +45,7 @@ router.get("/category", getCategories)
 // User Auth
 router.post("/signin", signin)
 router.post("/signup", signup)
-router.post("/restaurantuser/:id", getTheRestaurant)
+router.get("/restaurantuser/:id", getTheRestaurant)
 router.post("/serveur", ajouterServeur)
 // Create command
 router.post("/commande/:id", laCommande)

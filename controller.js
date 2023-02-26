@@ -225,9 +225,10 @@ export const getTheRestaurant = async (req, res) => {
   }
 }
 export const getAllRestaurants = async (req, res) => {
+  console.log("res")
   try {
-    const restaurants = await restaurant.find()
-    return res.status(200).json(restaurants)
+    const Allrestaurants = await restaurant.find()
+    return res.status(200).json(Allrestaurants)
   } catch (error) {
     res.status(500).json(error.message)
   }
@@ -326,7 +327,7 @@ export const deletePlat = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id))
       return res.status(404).send("plat pas trouvé")
     await dish.findByIdAndRemove(id)
-    res.status(200).json({ message: "Plat supprimé avec succés" })
+    res.status(200).json({ id: id })
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
