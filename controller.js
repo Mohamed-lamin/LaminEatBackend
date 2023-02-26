@@ -19,6 +19,7 @@ const commandSchema = mongoose.Schema({
   clientId: String,
   restaurantId: String,
   clientName: String,
+  clientImage: String,
   commandes: Array,
   total: String,
 })
@@ -35,7 +36,7 @@ const restaurantSchema = mongoose.Schema({
   codepostal: Number,
   rating: Number,
   category: String,
-  dishes: [dishSchema],
+
   userId: String,
 })
 const TypeSchema = mongoose.Schema({
@@ -215,7 +216,7 @@ export const createRestaurant = async (req, res) => {
 
 export const getTheRestaurant = async (req, res) => {
   const { id } = req.params
-  console.log("th" + id)
+
   try {
     const theRestauant = await restaurant.findById(id)
     return res.status(200).json(theRestauant)
@@ -295,7 +296,7 @@ export const createPlats = async (req, res) => {
       description,
       price,
       image,
-      id,
+      restaurantId: id,
     })
     await createdPlat.save()
     return res.status(200).json(createdPlat)
@@ -303,7 +304,7 @@ export const createPlats = async (req, res) => {
     return res.status(404).json({ message: error.message })
   }
 }
-// get All Plats
+// get All get Plats
 export const getPlats = async (req, res) => {
   const { id } = req.params
   console.log(id)
@@ -406,7 +407,7 @@ export const clientSignin = async (req, res) => {
 }
 
 export const clientSignup = async (req, res) => {
-  const { email, password, firstname, lastname } = req.body
+  const { email, password, firstname, lastname, profileimage } = req.body
 
   try {
     const oldClient = await client.findOne({ email })
@@ -420,6 +421,7 @@ export const clientSignup = async (req, res) => {
       email,
       password: hashedPassword,
       name: `${firstname} ${lastname}`,
+      profileimage,
     })
 
     const token = jwt.sign({ email: result.email, id: result._id }, secret, {
@@ -436,8 +438,8 @@ export const clientSignup = async (req, res) => {
 // create Commande
 export const laCommande = async (req, res) => {
   const { id } = req.params
-  const { platsCommand, clientId, clientName, total } = req.body
-
+  const { platsCommand, clientId, clientName, clientImage, total } = req.body
+  console.log(clientImage)
   try {
     const newCommande = await command.create({
       clientId: clientId,
@@ -445,6 +447,7 @@ export const laCommande = async (req, res) => {
       commandes: platsCommand,
       clientName: clientName,
       total: total,
+      clientImage: clientImage,
     })
     await newCommande.save()
     res.status(200).json({ message: "its saved" })
