@@ -13,6 +13,7 @@ const dishSchema = mongoose.Schema({
   description: String,
   price: Number,
   image: String,
+  restaurantId: String,
 })
 const commandSchema = mongoose.Schema({
   clientId: String,
@@ -40,7 +41,7 @@ const restaurantSchema = mongoose.Schema({
 const TypeSchema = mongoose.Schema({
   type_name: String,
   description: String,
-  restaurants_array: [restaurantSchema],
+  restaurantsId: [String],
 })
 
 const userSchema = mongoose.Schema({
@@ -49,6 +50,7 @@ const userSchema = mongoose.Schema({
   password: { type: String, required: true },
   id: { type: String },
   restaurantId: String,
+  role: String,
 })
 // Client Schema
 const clientSchema = mongoose.Schema({
@@ -122,6 +124,7 @@ export const signup = async (req, res) => {
       email,
       password: hashedPassword,
       name: `${firstname} ${lastname}`,
+      role: "Manager",
     })
 
     const token = jwt.sign({ email: result.email, id: result._id }, secret, {
@@ -133,6 +136,31 @@ export const signup = async (req, res) => {
     res.status(500).json({ message: "Une erreur est survenue" })
 
     console.log(error)
+  }
+}
+// Ajouter un serveur
+export const ajouterServeur = async (req, res) => {
+  const { email, password, firstname, lastname, restaurantId } = req.body
+  console.log(email)
+  try {
+    const oldUser = await UserModal.findOne({ email })
+
+    if (oldUser)
+      return res.status(400).json({ message: "le serveur existe déja" })
+
+    const hashedPassword = await bcrypt.hash(password, 12)
+
+    const result = await UserModal.create({
+      email,
+      password: hashedPassword,
+      name: `${firstname} ${lastname}`,
+      role: "Serveur",
+      restaurantId: restaurantId,
+    })
+
+    res.status(201).json({ message: "le Serveur a bien été ajouter" })
+  } catch (error) {
+    res.status(500).json({ message: "Une erreur est survenue" })
   }
 }
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -258,24 +286,10 @@ export const createPlats = async (req, res) => {
       description,
       price,
       image,
+      id,
     })
     await createdPlat.save()
-    const restaurantToUpdate = await restaurant.findById({ _id: id })
-    console.log(restaurantToUpdate.dishes)
-    restaurantToUpdate.dishes.push(createdPlat)
-    await restaurantToUpdate.save()
-
-    const restaurantUser = await UserModal.findOneAndUpdate(
-      { restaurantToUpdate },
-      { restaurantUser: restaurantToUpdate }
-    )
-    const theTypeD = await type.findOneAndUpdate(
-      { restaurantToUpdate },
-      { restaurants_array: { ...restaurantToUpdate } }
-    )
-    await restaurantUser.save()
-    await theTypeD.save()
-    return res.status(200).json(...restaurantToUpdate.dishes.slice(-1))
+    return res.status(200).json(createdPlat)
   } catch (error) {
     return res.status(404).json({ message: error.message })
   }
@@ -285,8 +299,10 @@ export const getPlats = async (req, res) => {
   const { id } = req.params
   console.log(id)
   try {
-    const restaurantToDisplay = await restaurant.findById({ _id: id })
-    return res.status(200).json(restaurantToDisplay.dishes)
+    // const restaurantToDisplay = await restaurant.findById({ _id: id })
+    // return res.status(200).json(restaurantToDisplay.dishes)
+    const plats = await dish.find({ restaurantId: id })
+    return res.status(200).json(plats)
   } catch (error) {
     return res.status(404).json({ message: error.message })
   }
@@ -294,27 +310,13 @@ export const getPlats = async (req, res) => {
 // delete Plat
 export const deletePlat = async (req, res) => {
   const { id } = req.params
-  const plat = req.body
-  const thePlaId = plat.PlatId
-  console.log(plat)
+  console.log(id)
+
   try {
-    await dish.findByIdAndRemove({ _id: thePlaId })
-    const theRestaurant = await restaurant.findById({ _id: id })
-
-    const restaurantToUpdate = await restaurant.findByIdAndUpdate(
-      { _id: id },
-      { dishes: theRestaurant.dishes.filter(dish => dish.id !== thePlaId) }
-    )
-    await restaurantToUpdate.save()
-    const CurrentrestaurantUser = await UserModal.findOneAndUpdate(
-      { theRestaurant },
-      { restaurantUser: restaurantToUpdate }
-    )
-    await CurrentrestaurantUser.save()
-
-    res
-      .status(200)
-      .json(...restaurantToUpdate.dishes.filter(dish => dish.id === thePlaId))
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(404).send("plat pas trouvé")
+    await dish.findByIdAndRemove(id)
+    res.status(200).json({ message: "Plat supprimé avec succés" })
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
@@ -332,28 +334,7 @@ export const updatePlat = async (req, res) => {
       { _id: _id, dishname, description, price, image },
       { new: true }
     )
-
     console.log(dishToUpdate)
-    const theRestaurant = await restaurant.findById({ _id: id })
-
-    await restaurant.findByIdAndUpdate(
-      id,
-      {
-        dishes: theRestaurant.dishes.map(dish =>
-          dish.id === _id
-            ? { _id: _id, dishname, description, price, image }
-            : dish
-        ),
-      },
-      { new: true }
-    )
-
-    const CurrentrestaurantUser = await UserModal.findOneAndUpdate(
-      { theRestaurant },
-      { restaurantUser: theRestaurant }
-    )
-    await CurrentrestaurantUser.save()
-
     return res
       .status(200)
       .json({ _id: _id, dishname, description, price, image })
@@ -370,11 +351,10 @@ export const CatList = async (req, res) => {
   console.log(listName)
 
   try {
-    const theRestaurnt = await restaurant.findById(id)
-    const theCatList = await type.findOne({ type_name: listName })
-    theCatList.restaurants_array.push(theRestaurnt)
-    await theCatList.save()
-    return res.status(200).json({ message: theCatList })
+    const typeList = await type.findOne({ type_name: listName })
+    typeList.restaurantsId.push(id)
+    await typeList.save()
+    return res.status(200).json(typeList)
   } catch (error) {
     res.status(404).json({ message: error.message })
   }
@@ -382,8 +362,7 @@ export const CatList = async (req, res) => {
 export const getCatList = async (req, res) => {
   try {
     const AllTypes = await type.find()
-
-    return res.status(200).send(AllTypes)
+    return res.status(200).json(AllTypes)
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
