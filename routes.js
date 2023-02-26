@@ -10,6 +10,7 @@ import {
   createRestaurant,
   createType,
   deletePlat,
+  getAllRestaurants,
   getCategories,
   getCatList,
   getPlats,
@@ -30,6 +31,7 @@ router.get("/types", getCatList)
 // Create Restaurant and Plats
 router.post("/restaurant/:id", createRestaurant)
 router.post("/restaurant", updateRestaurant)
+router.get("/allrestaurants", getAllRestaurants)
 router.post("/restaurant/plats/:id", createPlats)
 router.get("/restaurant/plats/:id", getPlats)
 router.delete("/restaurant/deleteplat/:id", deletePlat)

@@ -223,6 +223,14 @@ export const getTheRestaurant = async (req, res) => {
     res.status(500).json(error.message)
   }
 }
+export const getAllRestaurants = async (req, res) => {
+  try {
+    const restaurants = await restaurant.find()
+    return res.status(200).json(restaurants)
+  } catch (error) {
+    res.status(500).json(error.message)
+  }
+}
 
 // Updating restaurant
 export const updateRestaurant = async (req, res) => {
