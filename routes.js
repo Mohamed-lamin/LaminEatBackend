@@ -2,6 +2,7 @@ import express from "express"
 import {
   ajouterServeur,
   CatList,
+  clientCommand,
   clientSignin,
   clientSignup,
   commandes,
@@ -51,4 +52,6 @@ router.post("/serveur", ajouterServeur)
 router.post("/commande/:id", laCommande)
 // get commands (afficher toutes les commandes)
 router.get("/commands/:id", commandes)
+// get Client command
+router.get("/clientcommand/:id", clientCommand)
 export default router

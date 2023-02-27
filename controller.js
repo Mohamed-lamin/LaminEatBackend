@@ -22,6 +22,7 @@ const commandSchema = mongoose.Schema({
   clientImage: String,
   commandes: Array,
   total: String,
+  status: String,
 })
 
 const restaurantSchema = mongoose.Schema({
@@ -440,7 +441,8 @@ export const clientSignup = async (req, res) => {
 // create Commande
 export const laCommande = async (req, res) => {
   const { id } = req.params
-  const { platsCommand, clientId, clientName, clientImage, total } = req.body
+  const { platsCommand, clientId, clientName, clientImage, total, status } =
+    req.body
   console.log(clientImage)
   try {
     const newCommande = await command.create({
@@ -450,6 +452,7 @@ export const laCommande = async (req, res) => {
       clientName: clientName,
       total: total,
       clientImage: clientImage,
+      status: status,
     })
     await newCommande.save()
     res.status(200).json({ message: "its saved" })
@@ -457,12 +460,22 @@ export const laCommande = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
-// get Commandes
+// get Restaurant Commandes
 export const commandes = async (req, res) => {
   const { id } = req.params
   try {
     const AllCommands = await command.find({ restaurantId: id })
     return res.status(200).json(AllCommands)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+}
+// get Client Command
+export const clientCommand = async (req, res) => {
+  const { id } = req.params
+  try {
+    const clientCommand = await command.findOne({ clientId: id })
+    return res.status(200).json(clientCommand)
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
