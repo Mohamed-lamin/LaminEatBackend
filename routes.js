@@ -19,6 +19,7 @@ import {
   laCommande,
   signin,
   signup,
+  updateCommand,
   updatePlat,
   updateRestaurant,
 } from "./controller.js"
@@ -50,6 +51,8 @@ router.get("/restaurantuser/:id", getTheRestaurant)
 router.post("/serveur", ajouterServeur)
 // Create command
 router.post("/commande/:id", laCommande)
+// Update command
+router.patch("/commande/:id", updateCommand)
 // get commands (afficher toutes les commandes)
 router.get("/commands/:id", commandes)
 // get Client command

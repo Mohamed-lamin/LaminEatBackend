@@ -438,6 +438,21 @@ export const clientSignup = async (req, res) => {
     console.log(error)
   }
 }
+
+// udate Command
+export const updateCommand = async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const updatedCommande = await command.findByIdAndUpdate(id, {
+      status: "En cours",
+    })
+    await updatedCommande.save()
+    res.status(200).json({ updatedCommande, id })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
 // create Commande
 export const laCommande = async (req, res) => {
   const { id } = req.params
