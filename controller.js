@@ -495,6 +495,15 @@ export const clientCommand = async (req, res) => {
     return res.status(500).json({ message: error.message })
   }
 }
+export const SpecifiCclientCommand = async (req, res) => {
+  const { id } = req.params
+  try {
+    const clientCommand = await command.findById(id)
+    return res.status(200).json(clientCommand)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+}
 // Create Categories
 
 export const CreateCategory = async (req, res) => {

@@ -19,6 +19,7 @@ import {
   laCommande,
   signin,
   signup,
+  SpecifiCclientCommand,
   updateCommand,
   updatePlat,
   updateRestaurant,
@@ -57,4 +58,5 @@ router.patch("/commande/:id", updateCommand)
 router.get("/commands/:id", commandes)
 // get Client command
 router.get("/clientcommand/:id", clientCommand)
+router.get("/specificcommand/:id", SpecifiCclientCommand)
 export default router
