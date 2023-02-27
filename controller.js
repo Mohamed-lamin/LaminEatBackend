@@ -470,7 +470,7 @@ export const laCommande = async (req, res) => {
       status: status,
     })
     await newCommande.save()
-    res.status(200).json({ message: "its saved" })
+    res.status(200).json(newCommande)
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
