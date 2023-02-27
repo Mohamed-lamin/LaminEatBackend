@@ -42,7 +42,7 @@ const restaurantSchema = mongoose.Schema({
 const TypeSchema = mongoose.Schema({
   type_name: String,
   description: String,
-  restaurantsId: [String],
+  restaurants: [restaurantSchema],
 })
 
 const userSchema = mongoose.Schema({
@@ -363,9 +363,10 @@ export const CatList = async (req, res) => {
 
   try {
     const typeList = await type.findOne({ type_name: listName })
-    typeList.restaurantsId.push(id)
+    const restaurantToAdd = await restaurant.findById(id)
+    typeList.restaurants.push(restaurantToAdd)
     await typeList.save()
-    return res.status(200).json(typeList)
+    return res.status(200).json({ message: "retaurant bien a été ajouté" })
   } catch (error) {
     res.status(404).json({ message: error.message })
   }
