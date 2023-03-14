@@ -1,29 +1,26 @@
 import mongoose from "mongoose"
+import dishSchem from "./dishe.js"
+import * as mod from "./command.js"
+const dishSchema = mongoose.model("dish").schema
+const commandSchema = mongoose.model("commande").schema
 
-const categorySchema = mongoose.Schema({
-  category_name: String,
-  category_image: String,
-})
-
-const dishSchema = mongoose.Schema({
-  dishname: String,
-  description: String,
-  price: Number,
-  image: String,
-})
-
-const restaurantSchema = mongoose.Schema({
+export const schema = mongoose.Schema({
   restaurant_name: String,
   description: String,
   image: String,
   lat: Number,
   long: Number,
-  address: String,
+  numero: Number,
+  rue: String,
+  ville: String,
+  codepostal: Number,
   rating: Number,
-  category: categorySchema,
+  category: String,
   dishes: [dishSchema],
+  commandes: [commandSchema],
   userId: String,
 })
 
-const restaurant = mongoose.model("resto", restaurantSchema)
-export default restaurant
+// Client Schema
+
+export default mongoose.model("restaurant", schema)

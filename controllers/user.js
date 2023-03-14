@@ -9,29 +9,30 @@ export const signin = async (req, res) => {
   const { email, password } = req.body
 
   try {
-    const oldUser = await UserModal.findOne({ email })
+    const result = await UserModal.findOne({ email })
 
-    if (!oldUser)
+    if (!result)
       return res.status(404).json({ message: "utilisateur n'existe pas" })
 
-    const isPasswordCorrect = await bcrypt.compare(password, oldUser.password)
+    const isPasswordCorrect = await bcrypt.compare(password, result.password)
 
     if (!isPasswordCorrect)
       return res.status(400).json({ message: "Identifiants non valides" })
 
-    const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
+    const token = jwt.sign({ email: result.email, id: result._id }, secret, {
       expiresIn: "1h",
     })
 
-    res.status(200).json({ result: oldUser, token })
+    res.status(200).json({ result, token })
   } catch (err) {
     res.status(500).json({ message: "une erreur est survenue" })
+    console.log(err.message)
   }
 }
 
 export const signup = async (req, res) => {
   const { email, password, firstname, lastname } = req.body
-
+  console.log({ email, password, firstname, lastname })
   try {
     const oldUser = await UserModal.findOne({ email })
 
@@ -52,7 +53,7 @@ export const signup = async (req, res) => {
 
     res.status(201).json({ result, token })
   } catch (error) {
-    res.status(500).json({ message: "Une erreur est survenue" })
+    res.status(500).json({ message: error.message })
 
     console.log(error)
   }
