@@ -1,4 +1,4 @@
-import { client } from "../Models/restaurant"
+import client from "../Models/client.js"
 
 export const clientSignin = async (req, res) => {
   const { email, password } = req.body

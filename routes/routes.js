@@ -42,6 +42,7 @@ import {
   updateCommand,
 } from "../controllers/command.js"
 import { getCategories } from "../controllers/category.js"
+import { clientSignin, clientSignup } from "../controllers/client.js"
 const router = express.Router()
 
 // Create Type once
@@ -58,8 +59,8 @@ router.get("/restaurant/plats/:id", getPlats)
 router.post("/restaurant/deleteplat/:id", deletePlat)
 router.patch("/restaurant/updateplat/:id", updatePlat)
 // // client routes
-// router.post("/clientsignup", clientSignup)
-// router.post("/clientsignin", clientSignin)
+router.post("/clientsignup", clientSignup)
+router.post("/clientsignin", clientSignin)
 // // Restaurants categories
 // router.post("/category", CreateCategory)
 router.get("/category", getCategories)
