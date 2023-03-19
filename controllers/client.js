@@ -1,5 +1,7 @@
 import client from "../Models/client.js"
-
+import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
+const secret = "test"
 export const clientSignin = async (req, res) => {
   const { email, password } = req.body
 
@@ -29,8 +31,9 @@ export const clientSignin = async (req, res) => {
 }
 
 export const clientSignup = async (req, res) => {
+  console.log("helllo")
   const { email, password, firstname, lastname, profileimage } = req.body
-
+  console.log(email)
   try {
     const oldClient = await client.findOne({ email })
 
@@ -52,8 +55,6 @@ export const clientSignup = async (req, res) => {
 
     res.status(201).json({ result, token })
   } catch (error) {
-    res.status(500).json({ message: "Une erreur est survenue" })
-
-    console.log(error)
+    res.status(500).json({ message: error.message })
   }
 }
