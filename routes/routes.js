@@ -36,6 +36,7 @@ import {
 } from "../controllers/plats.js"
 import {
   commandes,
+  deleteCommand,
   laCommande,
   SpecifiCclientCommand,
   updateCommand,
@@ -71,6 +72,7 @@ router.post("/signup", signup)
 router.post("/commande/:id", laCommande)
 // Update command
 router.post("/updatecommand/:id", updateCommand)
+router.post("/deletecommand/:id", deleteCommand)
 // get commands (afficher toutes les commandes)
 router.get("/commandes/:id", commandes)
 // get Client command

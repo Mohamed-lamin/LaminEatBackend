@@ -40,8 +40,9 @@ export const updateCommand = async (req, res) => {
       { new: true }
     )
     const { commandes } = await restaurant.findById(id)
+
     const newcommands = commandes.map(item =>
-      item._id === commandId ? updatedCommand : item
+      item?._id == commandId ? updatedCommand : item
     )
     await restaurant.findByIdAndUpdate(
       id,
@@ -49,6 +50,30 @@ export const updateCommand = async (req, res) => {
       { new: true }
     )
     res.status(200).json(updatedCommand)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+export const deleteCommand = async (req, res) => {
+  const { id } = req.params
+  const { commandId } = req.body
+  console.log(commandId)
+  console.log(id)
+  try {
+    await command.findByIdAndDelete(commandId, {
+      new: true,
+    })
+    const { commandes } = await restaurant.findById(id)
+
+    const newcommands = commandes.map(item =>
+      item._id !== commandId ? item : ""
+    )
+    await restaurant.findByIdAndUpdate(
+      id,
+      { commandes: newcommands },
+      { new: true }
+    )
+    res.status(200).json(commandId)
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
