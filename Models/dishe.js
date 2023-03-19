@@ -5,6 +5,7 @@ export const schema = new mongoose.Schema({
   categorie: String,
   description: String,
   price: Number,
+  category: [],
   image: String,
 })
 

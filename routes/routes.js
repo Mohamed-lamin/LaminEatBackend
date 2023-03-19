@@ -34,7 +34,13 @@ import {
   getPlats,
   updatePlat,
 } from "../controllers/plats.js"
-import { commandes, laCommande } from "../controllers/command.js"
+import {
+  commandes,
+  laCommande,
+  SpecifiCclientCommand,
+  updateCommand,
+} from "../controllers/command.js"
+import { getCategories } from "../controllers/category.js"
 const router = express.Router()
 
 // Create Type once
@@ -55,7 +61,7 @@ router.patch("/restaurant/updateplat/:id", updatePlat)
 // router.post("/clientsignin", clientSignin)
 // // Restaurants categories
 // router.post("/category", CreateCategory)
-// router.get("/category", getCategories)
+router.get("/category", getCategories)
 // User Auth
 router.post("/signin", signin)
 router.post("/signup", signup)
@@ -64,10 +70,10 @@ router.post("/signup", signup)
 // Create command
 router.post("/commande/:id", laCommande)
 // Update command
-// router.patch("/commande/:id", updateCommand)
+router.post("/updatecommand/:id", updateCommand)
 // get commands (afficher toutes les commandes)
 router.get("/commandes/:id", commandes)
 // get Client command
 // router.get("/clientcommand/:id", clientCommand)
-// router.get("/specificcommand/:id", SpecifiCclientCommand)
+router.get("/specificcommand/:id", SpecifiCclientCommand)
 export default router

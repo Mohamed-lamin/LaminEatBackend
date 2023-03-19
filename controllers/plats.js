@@ -2,14 +2,15 @@ import dishe from "../Models/dishe.js"
 import restaurant from "../Models/restaurant.js"
 import mongoose from "mongoose"
 export const createPlats = async (req, res) => {
-  const { dishname, description, price, image } = req.body
-  console.log(dishname, description, price, image)
+  const { dishname, category, description, price, image } = req.body
+  console.log(dishname, category, description, price, image)
   const { id } = req.params
 
   try {
     const createdPlat = await dishe.create({
       dishname,
       description,
+      category,
       price,
       image,
     })
