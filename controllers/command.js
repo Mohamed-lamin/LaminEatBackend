@@ -65,9 +65,7 @@ export const deleteCommand = async (req, res) => {
     })
     const { commandes } = await restaurant.findById(id)
 
-    const newcommands = commandes.map(item =>
-      item._id !== commandId ? item : ""
-    )
+    const newcommands = commandes.filter(item => item._id != commandId)
     await restaurant.findByIdAndUpdate(
       id,
       { commandes: newcommands },

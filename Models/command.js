@@ -6,7 +6,7 @@ const schema = mongoose.Schema({
   clientName: String,
   clientImage: String,
   commandes: Array,
-  total: String,
+  total: Number,
   status: String,
 })
 
