@@ -19,10 +19,7 @@ const PORT = process.env.PORT || 5000
 const CONNECTIONURL = process.env.CONNECTION
 
 mongoose
-  .connect(
-    "mongodb+srv://daminsoft:RFolSa9Op0jRabl5@cluster0.1mouxyv.mongodb.net/?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(CONNECTIONURL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() =>
     app.listen(PORT, () => console.log(`Server Running on Port:${PORT}`))
   )
